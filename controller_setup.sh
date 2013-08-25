@@ -20,11 +20,11 @@ cat >> /etc/hosts <<EOF
 10.0.10.12  compute1
 EOF
 
-apt-get install -y linux-headers-3.2.0-23-generic
+apt-get install -y linux-headers-3.2.0-23-generic vim
 apt-get install -y mysql-server python-mysqldb rabbitmq-server 
 apt-get install -y keystone 
 apt-get install -y glance 
 apt-get install -y cinder-api cinder-scheduler cinder-volume
 apt-get install -y iscsitarget open-iscsi iscsitarget-dkms python-cinderclient
 apt-get install -y nova-api nova-cert novnc nova-consoleauth nova-scheduler nova-novncproxy nova-doc nova-conductor
-
+apt-get install -y openstack-dashboard

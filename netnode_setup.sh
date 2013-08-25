@@ -20,6 +20,6 @@ cat >> /etc/hosts <<EOF
 10.0.10.12  compute1
 EOF
 
-apt-get install -y python-mysqldb 
+apt-get install -y python-mysqldb vim
 apt-get install -y nova-network ebtables nova-api-metadata 
 
