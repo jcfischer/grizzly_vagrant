@@ -26,10 +26,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     
       vb.customize ["modifyvm", :id, "--memory", "1200"]
       vb.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+      file_to_disk = './disks/cinder_vol.vdi'
+
+      vb.customize ['createhd', '--filename', file_to_disk, '--size', 500 * 1024]
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
     end
     controller_config.vm.network :private_network, ip: "10.0.10.10" # eth1 mgt
     controller_config.vm.network :private_network, ip: "192.168.10.10" # eth2 tenant api
+  
+    config.vm.provision :shell, :path => 'controller_setup.sh'
   end
+
+
 
 
     config.vm.define :netnode do |netnode_config|
@@ -43,6 +51,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       netnode_config.vm.network :private_network, ip: "10.0.20.11" # eth1 vm traffic
       netnode_config.vm.network :private_network, ip: "192.168.101.101" # eth2 external net 
       netnode_config.vm.provision :shell, :inline => "ip link set mtu 1546 dev eth2"
+
+      config.vm.provision :shell, :path => 'netnode_setup.sh'
     end
 
     config.vm.define :compute1 do |compute1_config|
@@ -54,5 +64,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         compute1_config.vm.network :private_network, ip: "10.0.10.12" # eth1 mgt
         compute1_config.vm.network :private_network, ip: "10.0.20.12" # eth1 vm traffic
         compute1_config.vm.provision :shell, :inline => "ip link set mtu 1546 dev eth2"
+      config.vm.provision :shell, :path => 'compute_setup.sh'
     end
 end
