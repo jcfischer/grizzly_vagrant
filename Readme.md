@@ -40,6 +40,31 @@ um die 3 virtuellen Maschinen zu starten. Der erste Start wird einige (also eige
 da zuerst das Basis-Image heruntergeladen werden muss und sämtliche Komponenente von OpenStack installiert
 (aber noch nicht konfiguriert werden)
 
+Probleme
+--------
+
+Wir haben Fälle gesehen, bei denen die VMs nicht korrekt gebaut werden - bei der zweiten Instanz bricht der
+Befehl `vagrant up` ab.
+
+Hier ein Workaround, der bei unseren Tests funktioniert hat:
+
+    $ vagrant up    # Es wird versucht alle VMs zu starten, bei der zweiten VM kommt eine Fehlermeldung
+
+Im Virtualbox UI die "tote" VM löschen und alle Daten entfernen
+
+    $ vagrant up netnode   # die dritte der VMs bauen
+    $ vagrant up compute1  # die zweite VM bauen
+
+Jetzt sollten alle VMs laufen
+
+    $ vagrant status
+
+
+Wenn Sie soweit gekommen sind, ist alles klar für den Kurs. Falls das nicht klappt, nehmen Sie bitte bis
+spätestens Montag, 9.9 Vormittag Kontakt mit mir auf (jens-christian.fischer (at) switch.ch) Ich werde
+dann einen konfigurierten Laptop für Sie mitbringen (und Nein, es hat nicht genug Laptops für alle, und die
+Geräte sind auch nicht sehr leistungsfähig - es lohnt sich also, ihren High-End Rechner zu verwenden :)
+
 Umgang
 ------
 
