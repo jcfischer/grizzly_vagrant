@@ -32,6 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     controller_config.vm.network :private_network, ip: "10.0.0.3" # eth1 mgt
     controller_config.vm.network :private_network, ip: "172.16.0.3" # eth2 tenant api
+    controller_config.vm.network :forwarded_port, guest: 80, host: 8080
     config.vm.provision :shell, :path => 'controller_setup.sh'
   end
 
