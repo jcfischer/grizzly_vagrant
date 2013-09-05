@@ -1636,13 +1636,13 @@ without having to specify the credentials via command line options::
 you can check the status of the nova service::
 
     root@api-node:~# nova service-list
-    +----------------+----------+----------+---------+-------+----------------------------+
-    | Binary         | Host     | Zone     | Status  | State | Updated_at                 |
-    +----------------+----------+----------+---------+-------+----------------------------+
-    | nova-cert      | api-node | internal | enabled | up    | 2013-08-16T16:24:14.000000 |
-    | nova-conductor | api-node | internal | enabled | up    | 2013-08-16T16:24:15.000000 |
-    | nova-scheduler | api-node | internal | enabled | up    | 2013-08-16T16:24:20.000000 |
-    +----------------+----------+----------+---------+-------+----------------------------+
+    +----------------+------------+----------+---------+-------+----------------------------+
+    | Binary         | Host       | Zone     | Status  | State | Updated_at                 |
+    +----------------+------------+----------+---------+-------+----------------------------+
+    | nova-cert      | controller | internal | enabled | up    | 2013-08-16T16:24:14.000000 |
+    | nova-conductor | controller | internal | enabled | up    | 2013-08-16T16:24:15.000000 |
+    | nova-scheduler | controller | internal | enabled | up    | 2013-08-16T16:24:20.000000 |
+    +----------------+------------+----------+---------+-------+----------------------------+
 
 but you can also work with glance images::
 
@@ -1828,8 +1828,8 @@ following options are defined::
     force_dhcp_release=True
     firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
 
-    rabbit_host=10.0.0.3
-    sql_connection=mysql://novaUser:novaPass@10.0.0.3/nova
+    rabbit_host=db-node
+    sql_connection=mysql://novaUser:novaPass@db-node/nova
 
     flat_network_bridge=br100
     fixed_range=10.99.0.0/22
@@ -2028,16 +2028,16 @@ by using physically separated networks or by use of VLANs.
 
 Please note that (using the naming convention of our setup) the
 **eth3** interface on the **network-node** must be in the same L2 network as
-**eth2** in the **compute-node**
+**eth3** in the **compute-node**
 
 Update the ``/etc/network/interfaces`` file and configure a new
-bridge, called **br100** attached to the network interface ``eth2``::
+bridge, called **br100** attached to the network interface ``eth3``::
 
     auto br100
     iface br100 inet static
         address      0.0.0.0
-        pre-up ifconfig eth2 0.0.0.0
-        bridge-ports eth2
+        pre-up ifconfig eth3 0.0.0.0
+        bridge-ports eth3
         bridge_stp   off
         bridge_fd    0
 
@@ -2061,7 +2061,7 @@ to the **br100** bridge::
 
     root@compute-1 # brctl show
     bridge name bridge id       STP enabled interfaces
-    br100       8000.525400c71a7b   no      eth2
+    br100       8000.525400c71a7b   no      eth3
 
 
 nova configuration
@@ -2078,9 +2078,9 @@ and MySQL servers. The minimum information you have to provide in the
     verbose=True
     # api_paste_config=/etc/nova/api-paste.ini
     # compute_scheduler_driver=nova.scheduler.simple.SimpleScheduler
-    rabbit_host=10.0.0.3
-    # nova_url=http://10.0.0.6:8774/v1.1/
-    sql_connection=mysql://novaUser:novaPass@10.0.0.3/nova
+    rabbit_host=db-node
+    # nova_url=http://api-node:8774/v1.1/
+    sql_connection=mysql://novaUser:novaPass@db-node/nova
     root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 
     # Auth
@@ -2088,12 +2088,12 @@ and MySQL servers. The minimum information you have to provide in the
     auth_strategy=keystone
 
     # Imaging service
-    glance_api_servers=10.0.0.5:9292
+    glance_api_servers=image-node:9292
     image_service=nova.image.glance.GlanceImageService
 
     # Vnc configuration
     novnc_enabled=true
-    novncproxy_base_url=http://10.0.0.6:6080/vnc_auto.html
+    novncproxy_base_url=http://api-node:6080/vnc_auto.html
     novncproxy_port=6080
     vncserver_proxyclient_address=10.0.0.20
     vncserver_listen=0.0.0.0
