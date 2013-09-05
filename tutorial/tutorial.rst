@@ -912,12 +912,12 @@ Testing glance
 
 First of all, let's download a very small test image::
 
-    root@image-node:~# wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+    root@image-node:~# wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-i386-disk.img
 
 The command line tool to manage images is ``glance``. Uploading an image is easy::
 
     root@image-node:~# glance image-create --name cirros-0.3.0 --is-public=true \
-      --container-format=bare --disk-format=qcow2 --file cirros-0.3.0-x86_64-disk.img
+      --container-format=bare --disk-format=qcow2 --file cirros-0.3.0-i386-disk.img
     +------------------+--------------------------------------+
     | Property         | Value                                |
     +------------------+--------------------------------------+
@@ -2104,20 +2104,19 @@ and MySQL servers. The minimum information you have to provide in the
 You can just replace the ``/etc/nova/nova.conf`` file with the content
 displayed above.
 
-..
-   On the ``/etc/nova/api-paste.conf`` we have to put the information
-   on how to access the keystone authentication service. Ensure then that
-   the following information are present in this file::
-   TA: I don't think it is needed as api-paste.conf file is not even present.
 
-       [filter:authtoken]
-       paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
-       auth_host = 10.0.0.4
-       auth_port = 35357
-       auth_protocol = http
-       admin_tenant_name = service
-       admin_user = nova
-       admin_password = novaServ
+ On the ``/etc/nova/api-paste.ini`` we have to put the information
+ on how to access the keystone authentication service. Ensure then that
+ the following information are present in this file::
+
+     [filter:authtoken]
+     paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
+     auth_host = auth-node
+     auth_port = 35357
+     auth_protocol = http
+     admin_tenant_name = service
+     admin_user = nova
+     admin_password = novaServ
 
 
 nova-compute configuration
@@ -2354,9 +2353,11 @@ update the ``OPENSTACK_HOST`` variable::
 
     OPENSTACK_HOST = "auth-node.example.org"
 
-From the **physical node** you can connect to the api-node node by
-opening the URL ``http://172.16.0.6/horizon`` on your web browser
+From your laptop you can connect to the dashboard by opening the URL
+``http://localhost:8080/horizon`` (our Virtual machine setup forwards port 80
+from the controller node to port 8080 on the local machine).
 
+The user/password combination is **admin/keystoneAdmin**.
 
 ..
    Keystone is then checking on what the users/tenants are "supposed" to
