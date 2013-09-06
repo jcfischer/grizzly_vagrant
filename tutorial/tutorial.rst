@@ -71,7 +71,7 @@ werden durch Vagrant_ installiert und vorbereitet.
 
 Die VMs sind bereits vorkonfiguiert (Netzwerk) und enthalten alle benötigte
 Software damit wir im Workshop keine Zeit mit dem Warten auf die Installation
-verbruingen müssen.
+verbringen müssen.
 
 
 Starten der virtuellen Maschinen
@@ -80,7 +80,6 @@ Starten der virtuellen Maschinen
 Sie können die VMs über ein Terminal starten::
 
     $ cd grizzly_vagrant
-    $ vagrant up   # startet alle 3 VMs
     $ vagrant up controller  # oder einzeln
     $ vagrant up netnode
     $ vagrant up compute1
@@ -95,7 +94,7 @@ Und entsprechend wieder starten::
 
     $ vagrant resume
     beziehungsweise
-    $ vagrant up
+    $ vagrant up --no-provision
 
 
 Zugriff auf die VMs
@@ -108,6 +107,9 @@ installiert und bietet einen einfachen Zugang::
     $ vagrant ssh netnode
     $ vagrant ssh compute1
 
+Um X zu nutzen, können Sie die Verbindung zum Controller so starten::
+
+    $ vagrant ssh controller -- -x
 
 Network Setup
 +++++++++++++
@@ -120,7 +122,7 @@ configured, so that you can already connect to them using either the
 These are the networks we are going to use:
 
 +------+-----------------------+------------------+
-| eth0 | internal KVM network  | 192.168.122.0/24 |
+| eth0 | Laptop network        | as assigned      |
 +------+-----------------------+------------------+
 | eth1 | internal network      | 10.0.0.0/24      |
 +------+-----------------------+------------------+
@@ -131,13 +133,11 @@ These are the networks we are going to use:
 |      | on the network-node)  |                  |
 +------+-----------------------+------------------+
 
-The *internal KVM network* is a network needed because our virtual
-machines does not have real public IP addresses, therefore we need to
-allow them to communicate through the physical node. The libvirt
-daemon will automatically assign an IP address to this interface and
-set the needed iptables rules in order to configure the NAT and allow
-the machine to connect to the internet. On a production environment,
-you will not have this interface.
+The *Laptop Network* is a network needed because our virtual
+machines don't have real public IP addresses, therefore we need to
+allow them to communicate through the physical node. Virtualbox
+will automatically assign an IP address to this interface.
+On a production environment, you will not have this interface.
 
 The *internal network* is a trusted network used by all the OpenStack
 services to communicate to each other. Usually, you wouldn't setup a
@@ -159,12 +159,6 @@ bridge the virtual machines will be attached to. On a production
 environment you would probably use a separated L2 network for this,
 either by using VLANs or using a second physical interface.
 
-The following diagram shows both the network layout of the physical
-machines and of the virtual machines running in it:
-
-.. image:: ../images/network_diagram.png
-
-The IP addresses of these machines are:
 
 +--------------+--------------+-----------+--------------------------+------------+
 | host         | private      | private   | public hostname          | public     |
@@ -172,20 +166,21 @@ The IP addresses of these machines are:
 +==============+==============+===========+==========================+============+
 | db node      | db-node      | 10.0.0.3  | db-node.example.org      | 172.16.0.3 |
 +--------------+--------------+-----------+--------------------------+------------+
-| auth node    | auth-node    | 10.0.0.4  | auth-node.example.org    | 172.16.0.4 |
+| auth node    | auth-node    | 10.0.0.3  | auth-node.example.org    | 172.16.0.3 |
 +--------------+--------------+-----------+--------------------------+------------+
-| image node   | image-node   | 10.0.0.5  | image-node.example.org   | 172.16.0.5 |
+| image node   | image-node   | 10.0.0.3  | image-node.example.org   | 172.16.0.3 |
 +--------------+--------------+-----------+--------------------------+------------+
-| api node     | api-node     | 10.0.0.6  | api-node.example.org     | 172.16.0.6 |
+| api node     | api-node     | 10.0.0.3  | api-node.example.org     | 172.16.0.3 |
++--------------+--------------+-----------+--------------------------+------------+
+| volume node  | volume-node  | 10.0.0.3  | volume-node.example.org  | 172.16.0.3 |
 +--------------+--------------+-----------+--------------------------+------------+
 | network node | network-node | 10.0.0.7  | network-node.example.org | 172.16.0.7 |
 +--------------+--------------+-----------+--------------------------+------------+
-| volume node  | volume-node  | 10.0.0.8  | volume-node.example.org  | 172.16.0.8 |
-+--------------+--------------+-----------+--------------------------+------------+
 | compute-1    | compute-1    | 10.0.0.20 |                          |            |
 +--------------+--------------+-----------+--------------------------+------------+
-| compute-2    | compute-2    | 10.0.0.21 |                          |            |
-+--------------+--------------+-----------+--------------------------+------------+
+
+The setup can be extended to 6 virtual machines, but for sanity reasons we coalesce multiple machines into 
+one virtual machine.
 
 Both private and public hostnames are present in the ``/etc/hosts`` of
 the physical machines, in order to allow you to connect to them using
@@ -198,10 +193,6 @@ is thus left unconfigured at the beginning.
 On the compute node, moreover, we will need to manually create a
 *bridge* which will allow the OpenStack virtual machines to access the
 network which connects the two physical nodes.
-
-The *internal KVM network* is only needed because we are using virtual
-machines, but on a production environment you are likely to have only
-2 network cards for each of the nodes, and 3 on the network node.
 
 
 ..
