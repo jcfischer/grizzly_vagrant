@@ -1,13 +1,19 @@
-/ch/open Workshoptage - Training Session on OpenStack
-=====================================================
+Installation von OpenStack Grizzly
+==================================
 
-* `Jens-Christian Fischer <jens-christian.fischer@switch.ch>`_
+.. footer::
+ 
+  OpenStack Grizzly Workshop - /ch/open - ###Page###/###Total###
+
+10.9.2013, ETH Zürich
+
+`Jens-Christian Fischer <jens-christian.fischer@switch.ch>`_ SWITCH
+
 
 Dieser Guide basiert auf dem Installations-Tutorial von
 Antonio Messina und Tyanko Aleksiev der Uni Zürich anlässlich der
 GridKA Schulung
-https://github.com/gc3-uzh-ch/gridka-school_
-
+<https://github.com/gc3-uzh-ch/gridka-school>
 
 Dieses Tutorial dient als Referenz für die Installation einer OpenStack `Grizzly` Cloud.
 
@@ -19,6 +25,9 @@ Gründen beschränken wir uns jedoch auf weniger Maschinen... Die Konfiguration
 sollte unverändert auf mehreren Maschinen laufen, wenn die DNS/Host files
 entsprechend angepasst werden.
 
+.. raw:: pdf
+
+  PageBreak
 
 Tutorial Überblick
 ------------------
