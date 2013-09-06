@@ -59,7 +59,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     netnode_config.vm.network :private_network, ip: "10.0.0.7" # eth1 mgt
     netnode_config.vm.network :private_network, ip: "172.16.0.7" # eth2 external net
-    netnode_config.vm.network :private_network, ip: "0.0.0.0" # eth3 OpenStack Private Network
+    netnode_config.vm.network :private_network, ip: "10.0.99.7" # eth3 OpenStack Private Network
     netnode_config.vm.provision :shell, :inline => "ip link set mtu 1546 dev eth2"
 
     config.vm.provision :shell, :path => 'netnode_setup.sh'
