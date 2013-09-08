@@ -12,7 +12,7 @@ Die installierten Imagen benötigen knapp 10 GB Speicherplatz auf der Festplatte
 Software:
 
   * Virtualbox: http://virtualbox.org
-  * Vagrant: http://vagrantup.com
+  * Vagrant: http://vagrantup.com (getestet Version 1.2.7)
   * PuTTY (nur unter Windows): http://www.chiark.greenend.org.uk/~sgtatham/putty/
 
 Die Software steht unter Windows, Mac und Linux zur Verfügung.
@@ -24,7 +24,7 @@ Dieses Repository clonen oder downloaden und dann Vagrant starten:
 
 Mit git:
 
-    git clone git@github.com:jcfischer/grizzly_vagrant.git
+    git clone https://github.com/jcfischer/grizzly_vagrant.git
     cd grizzly_vagrant
     vagrant up
 
