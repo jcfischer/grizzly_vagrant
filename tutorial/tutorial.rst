@@ -1204,7 +1204,7 @@ endpoint are correct, specifically the options ``service_host``,
     service_protocol = http
     service_host = auth-node
     service_port = 5000
-    auth_host = auth_node
+    auth_host = auth-node
     auth_port = 35357
     auth_protocol = http
     admin_tenant_name = service
